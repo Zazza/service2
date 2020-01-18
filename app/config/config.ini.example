@@ -1,9 +1,5 @@
-[site]
-HOST_URL=
-baseUri=/
-
 [db]
-host=api-db
-username=user
-password=secret
-dbname=api
+host=service-postgres
+username=service
+password=service
+dbname=service

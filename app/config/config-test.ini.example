@@ -1,7 +1,3 @@
-[site]
-HOST_URL=
-baseUri=/
-
 [db]
 host=api-db
 username=user

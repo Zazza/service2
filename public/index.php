@@ -11,6 +11,8 @@ try {
      * Read the configuration
      */
     $config = include __DIR__ . "/../app/config/config.php";
+    $configS = new \Phalcon\Config\Adapter\Ini(__DIR__."/../app/config/config.ini");
+    $config->merge($configS);
 
     /**
      * The FactoryDefault Dependency Injector automatically registers
@@ -33,8 +35,17 @@ try {
      */
     include APP_PATH . '/config/loader.php';
 
-    $application = new \Phalcon\Mvc\Application($di);
-    $response = $application->handle();
+    $dispatcher = $di->getShared('dispatcher');
+    $api = new \App\JsonRPC\Api($dispatcher);
+    $server = new \Datto\JsonRpc\Server($api);
+
+    $request = new \Phalcon\Http\Request();
+    $data = $request->getRawBody();
+
+    $resultContent = $server->reply($data);
+
+    $response = $di->getShared('response');
+    $response->setContent($resultContent);
     $response->send();
 } catch (\Exception $e) {
     echo $e->getMessage() . '<br>';
